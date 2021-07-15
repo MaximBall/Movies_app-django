@@ -1,23 +1,29 @@
 from django.shortcuts import render
 from django.views.generic.base import View
-from django.views.generic.list import ListView
+from django.views.generic import ListView, DetailView
 from .models import Movie
 
 
-class MoviesView(View):
+class MoviesView(ListView):
     """Список фильмов"""
-#    model = Movie
-#   movies = Movie.objects.all()
-#  template_name = "movies/movies.html"
+    model = Movie
+    queryset = Movie.objects.filter(draft=False)
 
-    def get(self, request):
-        movies = Movie.objects.all()
-        return render(request, "movies/movies.html", {"movie_list": movies})
+    #template_name = "movies/movie_list.html"
+
+    #def get(self, request):
+     #   movies = Movie.objects.all()
+      #  return render(request, "movies/movie_list.html", {"movie_list": movies})
 
 
-class MovieDetailView(View):
+class MovieDetailView(DetailView):
     """"Описание фильма"""
     """pk - некоторое число которое мы передаем из url"""
-    def get(self, request, slug):
-        movie = Movie.objects.get(url=slug)
-        return render(request, "movies/movie_detail.html", {"movie": movie})
+    model = Movie
+    slug_field = "url"
+    #queryset = Movie.objects.get(url=slug)
+    #template_name = "movies/movie_list.html"
+
+    #def get(self, request, slug):
+     #   movie = Movie.objects.get(url=slug)
+      #  return render(request, "movies/movie_detail.html", {"movie": movie})

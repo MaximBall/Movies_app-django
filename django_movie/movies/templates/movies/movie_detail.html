@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-    <img src="{{ movie.poster.url }}" class="img-fluid" alt="" >
+    <img src="{{ movie.poster.url }}" class="img-fluid" alt="постер фильма" >
 </div>
 <div>{{ movie.title }}</div>
 <div>{{ movie.year }}</div>
@@ -17,5 +17,14 @@
         {{ directors.name }}
     {% endfor %}
 </div>
+
+<div>
+    <p>Кадры из фильма</p>>
+    {% for shots in movie.movieshots_set.all %}
+        <img src="{{ shots.image.url }}" class="img-fluid" alt="кадр фильма" width="200" height="110" >
+    {% endfor %}
+</div>
+
+</form>
 </body>
 </html>

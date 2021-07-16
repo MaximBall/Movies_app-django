@@ -208,3 +208,7 @@ body {
   text-shadow: none;
   color: transparent;
 }
+
+.icon-home {
+  background-position: 0 0;
+}

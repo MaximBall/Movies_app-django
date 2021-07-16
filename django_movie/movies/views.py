@@ -4,6 +4,11 @@ from django.views.generic import ListView, DetailView
 from .models import Movie
 
 
+class Base(View):
+    def get(self, request):
+        return render(request, "movies/base.html")
+
+
 class MoviesView(ListView):
     """Список фильмов"""
     model = Movie

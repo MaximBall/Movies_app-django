@@ -1,95 +1,146 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <!-- //Meta tag Keywords -->
-    <title>Movies App</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link type="text/css" href="{% static 'movies/css/styles.css'%}" rel="stylesheet"/>
-</head>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title>Movies App</title>
+		<meta name="description" content="A search input that morphs into a fullscreen search page." />
+		<meta name="keywords" content="search, input, effect, morph, transition, inspiration" />
+		<meta name="author" content="Codrops" />
 
-<body>
+		<link href='http://fonts.googleapis.com/css?family=Raleway:100,700,800' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="{% static 'movies/fonts/font-awesome.min.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'movies/css/normalize.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'movies/css/demo.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'movies/css/component.css' %}" />
+		<!--[if IE]>
+  		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="container">
+			<aside class="sidebar clearfix">
+				<nav>
+					<a href="#"><i class="fa fa-fw fa-comments-o"></i></a>
+					<a href="#"><i class="fa fa-fw fa-send-o"></i></a>
+				</nav>
+			</aside>
+			<div id="morphsearch" class="morphsearch">
 
-    <div id="page" class="page">
+				<form class="morphsearch-form">
+					<input class="morphsearch-input" type="search" placeholder="Search..."/>
+					<button class="morphsearch-submit" type="submit">Search</button>
+				</form>
+
+				<div class="morphsearch-content">
+
+					<div class="dummy-column">
+						<h2>Actors/Directors</h2>
+
+						{% for directors in director_list %}
+
+						<a class="dummy-media-object" href="#">
+							<img class="round" src="{{ directors.image.url }}" alt="{{ directors.name }}"/>
+							<h3>
+								{{ directors.name }}
+							</h3>
+						</a>
+
+						{% endfor %}
+
+					</div>
+					<div class="dummy-column">
+						<h2>Films</h2>
+
+						{% for movie in movie_list %}
+
+						<a class="dummy-media-object" href="{{ movie.get_absolute_url }}">
+							<img src="{{ movie.poster.url }}" alt="{{ movie.title }}"/>
+							<h3>
+								{{ movie.title }}
+							</h3>
+						</a>
+
+						{% endfor %}
+
+					</div>
+					<div class="dummy-column">
+
+						<h2>Genres</h2>
+
+						{% for genre in genres_list %}
+
+						<a class="dummy-media-object" href="#">
+							<h3>
+								{{ genre.name }}
+							</h3>
+						</a>
+
+						{% endfor %}
+
+					</div>
+				</div><!-- /morphsearch-content -->
+				<span class="morphsearch-close"></span>
+			</div><!-- /morphsearch -->
+			<header class="codrops-header">
+				<h1>Movies App <span>A search input that morphs into a fullscreen search page.</span></h1>
+			</header>
+			<div class="overlay"></div>
+		</div><!-- /container -->
+		<script src="{% static 'movies/js/classie.js' %}"></script>
+		<script>
+			(function() {
+				var morphSearch = document.getElementById( 'morphsearch' ),
+					input = morphSearch.querySelector( 'input.morphsearch-input' ),
+					ctrlClose = morphSearch.querySelector( 'span.morphsearch-close' ),
+					isOpen = isAnimating = false,
+					// show/hide search area
+					toggleSearch = function(evt) {
+						// return if open and the input gets focused
+						if( evt.type.toLowerCase() === 'focus' && isOpen ) return false;
+
+						var offsets = morphsearch.getBoundingClientRect();
+						if( isOpen ) {
+							classie.remove( morphSearch, 'open' );
+
+							// trick to hide input text once the search overlay closes
+							// todo: hardcoded times, should be done after transition ends
+							if( input.value !== '' ) {
+								setTimeout(function() {
+									classie.add( morphSearch, 'hideInput' );
+									setTimeout(function() {
+										classie.remove( morphSearch, 'hideInput' );
+										input.value = '';
+									}, 300 );
+								}, 500);
+							}
+
+							input.blur();
+						}
+						else {
+							classie.add( morphSearch, 'open' );
+						}
+						isOpen = !isOpen;
+					};
+
+				// events
+				input.addEventListener( 'focus', toggleSearch );
+				ctrlClose.addEventListener( 'click', toggleSearch );
+				// esc key closes search overlay
+				// keyboard navigation events
+				document.addEventListener( 'keydown', function( ev ) {
+					var keyCode = ev.keyCode || ev.which;
+					if( keyCode === 27 && isOpen ) {
+						toggleSearch(ev);
+					}
+				} );
 
 
-        <section class="container">
-            <nav>
-                <ul class="nav">
-                    <li class=""><a href="/" title="Home">Home</a></li>
-                    <li class=""><a href="#" title="About">About</a></li>
-                </ul>
-            </nav>
-        </section>
-
-
-        <section class="ab-info-main py-md-5 py-4 editContent" style="padding-left: 3rem; padding-right: 3rem;">
-            <div class="container-fluid py-md-3">
-                <div class="row">
-                    <div class="side-bar col-lg-3">
-
-                        <div class="search-bar w3layouts-newsletter">
-                            <h3 class="sear-head editContent" >Поиск фильма</h3>
-                            <form action="#" method="post" class="d-flex editContent" >
-                                <input type="search" placeholder="Введите название..." name="search" class="form-control" required="">
-                                <button class="btn1 btn" ><span class="fa fa-search" aria-hidden="true" ></span></button>
-                            </form>
-                        </div>
-
-
-                    </div>
-                    <!-- //product left -->
-                    <!-- product right -->
-                    <div class="left-ads-display col-lg-9">
-                        <div class="row">
-                            {% for movie in movie_list %}
-                            <div class="col-md-4 product-men">
-                                <div class="product-shoe-info editContent text-center mt-lg-4" >
-                                    <div class="men-thumb-item">
-                                        <img src="{{ movie.poster.url }}" class="img-fluid" alt="" >
-                                    </div>
-                                    <div class="item-info-product">
-                                        <h4 class="">
-                                            <a href="{{ movie.get_absolute_url }}" class="editContent" >
-                                                {{ movie.title }}
-                                            </a>
-                                        </h4>
-
-                                        <div class="product_price">
-                                            <div class="grid-price">
-                                                <span class="money editContent" >
-                                                    {{ movie.tagline }}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <!--<div class="grid-img-right mt-4 text-right bg bg1" >
-                            <span class="money editContent" >Flat 50% Off</span>
-                            <a href="moviesingle.html" class="btn" >Now</a>
-                        </div>-->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="about">
-            <p class="about-links">
-                <a href="http://www.cssflow.com/snippets/dark-horizontal-navigation" target="_parent">View Article</a>
-                <a href="http://www.cssflow.com/snippets/dark-horizontal-navigation.zip" target="_parent">Download</a>
-            </p>
-            <p class="about-author">
-                &copy; 2012&ndash;2013 <a href="http://thibaut.me" target="_blank">Thibaut Courouble</a> -
-                <a href="http://www.cssflow.com/mit-license" target="_blank">MIT License</a><br>
-                Original PSD by <a href="http://www.pixeden.com/psd-web-elements/light-and-dark-psd-web-menu" target="_blank">Pixeden</a>
-            </p>
-        </section>
-        </div>
-    </body>
+				/***** for demo purposes only: don't allow to submit the form *****/
+				morphSearch.querySelector( 'button[type="submit"]' ).addEventListener( 'click', function(ev) { ev.preventDefault(); } );
+			})();
+		</script>
+	</body>
 </html>

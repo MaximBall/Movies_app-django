@@ -112,10 +112,19 @@ body {
 }
 
 .container {
-  margin: 100px auto;
   width: 720px;
   text-align: center;
 }
+
+.textField {
+    width: 100%; /* Ширина поля */
+    padding: 10px; /* Поля */
+    box-sizing: border-box; /* Алгоритм расчёта ширины */
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.2); /* Тень внутри */
+    border: 1px solid #ccc; /* Параметры рамки */
+    color: #ff6d37; /* Цвет текста */
+}
+
 
 .nav {
   height: 48px;
@@ -194,21 +203,4 @@ body {
 }
 .nav .nav-icon {
   padding: 0 15px;
-}
-
-[class*="icon-"] {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  vertical-align: text-top;
-  background-image: url("../img/icons.png");
-  background-repeat: no-repeat;
-  background-color: transparent;
-  font: 0/0 serif;
-  text-shadow: none;
-  color: transparent;
-}
-
-.icon-home {
-  background-position: 0 0;
 }
